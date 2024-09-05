@@ -1,108 +1,142 @@
-#include <stdio.h>
-#define MAX_CITIES 5
-#define MAX_HOTELS 4
-#define MAX_MENU_ITEMS 5
-struct Order 
-{
-    int city;
-    int hotel;
-    int menu;
-    int quantity;
-    float price;
-};
+import java.util.Scanner;
 
-struct Price
-{
-    float menuPrices[MAX_CITIES][MAX_HOTELS][MAX_MENU_ITEMS] ;
-};
-int City,Hotel,menu,menuPrices,orderCount;
-float total;
-char cities[MAX_CITIES][50] = {"","NAMAKKAL", "KARUR", "SALEM", "ERODE" };
-char hotels[MAX_CITIES][MAX_HOTELS][50] = {{""},{"", "DHARMAN HOTEL", "Mr BURGER NAMAKKAL", "ABI MESS" },{"","KTC","THE PIZZA HUB","KS MESS"},{"","CLASSIC PIZZA RESTAURANT","Mr FOOD","RELIANCE"},{"","LOGANATHAN MESS","TEDDY HOTEL","ANITHA REATAURANT"}};
-char menus[MAX_CITIES][MAX_HOTELS][MAX_MENU_ITEMS][50] = {{{""},{"", "IDLI", "PAROTTA", "POORI", "CHAPATHI"},{"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"},{"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"}},
-    {{""},{"", "IDLI", "PAROTTA", "POORI", "CURD RICE"}, {"", "CHEESE BURGER", "CHICKEN BURGER", "BACON BURGER", "LAMB BURGER"},{"", "IDLI", "PAROTTA", "POORI", "CHAPATHI"}},
-    {{""},{"","PICY CHETTINAD CHICKEN", "BUTTER CHICKEN", "CHICKEN BRIYANI", "MUTTON BRIYANI"}, {"", "CHEESE PIZZA", "MEAT PIZAA", "GREEK PIZAA", "VEGGIE PIZAA"},{"", "IDLI", "PAROTTA", "POORI", "CHAPATHI"}},
-    {{""},{"", "CHEESE PIZZA", "MEAT PIZAA", "GREEK PIZAA", "VEGGIE PIZAA"}, {"", "CHICKEN RISE", "EGG RISE", "CHICKEN NOODLES", "VEG NOODLES"},{"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"}},
-    {{""},{"", "IDLI", "PAROTTA", "POORI", "CHAPATHI"},{"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"},{"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"}}};
-float prices[MAX_CITIES][MAX_HOTELS][MAX_MENU_ITEMS] = {
-        { {0.0}, {0.0, 5.0, 10.0, 8.0, 12.0}, {0.0, 7.0, 15.0, 20.0, 10.0}, {0.0, 8.0, 12.0, 18.0, 10.0} },
-        { {0.0}, {0.0, 6.0, 12.0, 10.0, 14.0}, {0.0, 10.0, 18.0, 22.0, 12.0}, {0.0, 7.0, 15.0, 20.0, 10.0} },
-        { {0.0}, {0.0, 8.0, 14.0, 18.0, 15.0}, {0.0, 12.0, 20.0, 25.0, 14.0}, {0.0, 6.0, 10.0, 16.0, 8.0} },
-        { {0.0}, {0.0, 7.0, 12.0, 15.0, 14.0}, {0.0, 10.0, 18.0, 22.0, 12.0}, {0.0, 8.0, 14.0, 20.0, 10.0} },
-        { {0.0}, {0.0, 5.0, 10.0, 8.0, 12.0}, {0.0, 8.0, 15.0, 20.0, 12.0}, {0.0, 7.0, 12.0, 18.0, 10.0} }
-    }; 
-void displaycities(), displayhotel(),displayhotelmenu();
-float calculatetotal();
+class SoruMukiyam {
+    static final int MAX_CITIES = 5;
+    static final int MAX_HOTELS = 4;
+    static final int MAX_MENU_ITEMS = 5;
 
-int main() 
-{
-        printf("******************************  WELCOME TO SORU MUKIYAM  ***************************\n");
-displaycities(); // F1
-        printf("Enter the city: ");
-        scanf("%d", &City);
-
-displayhotel(City); // F2
-        printf("Enter the hotel: ");
-        scanf("%d", &Hotel);
-
-displayhotelmenu(City, Hotel); // F3(1)
-
-        printf("How many items do you want to order? ");
-        scanf("%d", &orderCount);
-    
-   for (int i = 0; i < orderCount; i++) 
-    {
-displayhotelmenu(City, Hotel); // F3(2)
-        struct Order order;
-        order.city = City;
-        order.hotel = Hotel;
-        printf("Enter the menu item: ");
-        scanf("%d", &order.menu);
-        printf("Enter the quantity: ");
-        scanf("%d", &order.quantity);
-
-        float itemTotal = calculatetotal(order);
-        total += itemTotal;
+    static class Order {
+        int city;
+        int hotel;
+        int menu;
+        int quantity;
+        float price;
     }
 
-    total += total * 0.18;
-    printf("\nTotal Bill With GST: %.2f\n", total);
-    printf("\n               Thank for using *SORU MUKIYAM* Have a nice day      \n");
-    printf("\n*NOTE-(If you want to make next order using *SORU MUKIYAM* click the run button in top left or press the F9 )");
-    return 0;
-}
+    static class Price {
+        float[][][] menuPrices = new float[MAX_CITIES][MAX_HOTELS][MAX_MENU_ITEMS];
+    }
 
-void displaycities() 
-{
-    printf("\nAvailable Cities:\n");
-    for (int i = 1; i < MAX_CITIES; i++) 
-        {
-        printf("%d. %s\n", i, cities[i]);
+    static int city, hotel, menu, orderCount;
+    static float total;
+    static String[] cities = {"", "NAMAKKAL", "KARUR", "SALEM", "ERODE"};
+    static String[][] hotels = {
+            {"", "", "", ""},
+            {"", "DHARMAN HOTEL", "Mr BURGER NAMAKKAL", "ABI MESS"},
+            {"", "KTC", "THE PIZZA HUB", "KS MESS"},
+            {"", "CLASSIC PIZZA RESTAURANT", "Mr FOOD", "RELIANCE"},
+            {"", "LOGANATHAN MESS", "TEDDY HOTEL", "ANITHA RESTAURANT"}
+    };
+    static String[][][] menus = {
+            {
+                    {"", "", "", "", ""},
+                    {"", "IDLI", "PAROTTA", "POORI", "CHAPATHI"},
+                    {"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"},
+                    {"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"}
+            },
+            {
+                    {"", "", "", "", ""},
+                    {"", "IDLI", "PAROTTA", "POORI", "CURD RICE"},
+                    {"", "CHEESE BURGER", "CHICKEN BURGER", "BACON BURGER", "LAMB BURGER"},
+                    {"", "IDLI", "PAROTTA", "POORI", "CHAPATHI"}
+            },
+            {
+                    {"", "", "", "", ""},
+                    {"", "SPICY CHETTINAD CHICKEN", "BUTTER CHICKEN", "CHICKEN BRIYANI", "MUTTON BRIYANI"},
+                    {"", "CHEESE PIZZA", "MEAT PIZZA", "GREEK PIZZA", "VEGGIE PIZZA"},
+                    {"", "IDLI", "PAROTTA", "POORI", "CHAPATHI"}
+            },
+            {
+                    {"", "", "", "", ""},
+                    {"", "CHEESE PIZZA", "MEAT PIZZA", "GREEK PIZZA", "VEGGIE PIZZA"},
+                    {"", "CHICKEN RICE", "EGG RICE", "CHICKEN NOODLES", "VEG NOODLES"},
+                    {"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"}
+            },
+            {
+                    {"", "", "", "", ""},
+                    {"", "IDLI", "PAROTTA", "POORI", "CHAPATHI"},
+                    {"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"},
+                    {"", "CHEESE PIZZA", "LAMB BURGER", "CHICKEN BRIYANI", "POORI"}
+            }
+    };
+    static float[][][] prices = {
+            {
+                    {0.0f}, {0.0f, 5.0f, 10.0f, 8.0f, 12.0f}, {0.0f, 7.0f, 15.0f, 20.0f, 10.0f}, {0.0f, 8.0f, 12.0f, 18.0f, 10.0f}
+            },
+            {
+                    {0.0f}, {0.0f, 6.0f, 12.0f, 10.0f, 14.0f}, {0.0f, 10.0f, 18.0f, 22.0f, 12.0f}, {0.0f, 7.0f, 15.0f, 20.0f, 10.0f}
+            },
+            {
+                    {0.0f}, {0.0f, 8.0f, 14.0f, 18.0f, 15.0f}, {0.0f, 12.0f, 20.0f, 25.0f, 14.0f}, {0.0f, 6.0f, 10.0f, 16.0f, 8.0f}
+            },
+            {
+                    {0.0f}, {0.0f, 7.0f, 12.0f, 15.0f, 14.0f}, {0.0f, 10.0f, 18.0f, 22.0f, 12.0f}, {0.0f, 8.0f, 14.0f, 20.0f, 10.0f}
+            },
+            {
+                    {0.0f}, {0.0f, 5.0f, 10.0f, 8.0f, 12.0f}, {0.0f, 8.0f, 15.0f, 20.0f, 12.0f}, {0.0f, 7.0f, 12.0f, 18.0f, 10.0f}
+            }
+    };
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("******************************  WELCOME TO SORU MUKIYAM  ***************************");
+
+        displayCities();
+        System.out.print("Enter the city: ");
+        city = scanner.nextInt();
+
+        displayHotel(city);
+        System.out.print("Enter the hotel: ");
+        hotel = scanner.nextInt();
+
+        displayHotelMenu(city, hotel);
+
+        System.out.print("How many items do you want to order? ");
+        orderCount = scanner.nextInt();
+
+        for (int i = 0; i < orderCount; i++) {
+            displayHotelMenu(city, hotel);
+            Order order = new Order();
+            order.city = city;
+            order.hotel = hotel;
+            System.out.print("Enter the menu item: ");
+            order.menu = scanner.nextInt();
+            System.out.print("Enter the quantity: ");
+            order.quantity = scanner.nextInt();
+            float itemTotal = calculateTotal(order);
+            total += itemTotal;
         }
-}
 
-void displayhotel(int city) {
-  
-    printf("\nHotels in %s:\n", cities[City]);
-    for (int i = 1; i < MAX_HOTELS; i++) 
-    {
-        printf("%d. %s\n", i, hotels[City][i]);
+        total += total * 0.18;
+        System.out.printf("\nTotal Bill With GST: %.2f\n", total);
+        System.out.println("\n               Thank you for using SORU MUKIYAM. Have a nice day!");
+        System.out.println("\n*NOTE-(If you want to make another order using SORU MUKIYAM, run the program again)");
+        scanner.close();
+    }
+
+    static void displayCities() {
+        System.out.println("\nAvailable Cities:");
+        for (int i = 1; i < MAX_CITIES; i++) {
+            System.out.printf("%d. %s\n", i, cities[i]);
+        }
+    }
+
+    static void displayHotel(int city) {
+        System.out.printf("\nHotels in %s:\n", cities[city]);
+        for (int i = 1; i < MAX_HOTELS; i++) {
+            System.out.printf("%d. %s\n", i, hotels[city][i]);
+        }
+    }
+
+    static void displayHotelMenu(int city, int hotel) {
+        System.out.printf("\nMenu in %s:\n", hotels[city][hotel]);
+        for (int i = 1; i < MAX_MENU_ITEMS; i++) {
+            System.out.printf("%d. %s \n", i, menus[city][hotel][i]);
+        }
+    }
+
+    static float calculateTotal(Order order) {
+        float itemPrice = prices[order.city][order.hotel][order.menu];
+        return order.quantity * itemPrice;
     }
 }
-
-void displayhotelmenu(int city, int hotel) {
-    printf("\nMenu in %s:\n", hotels[City][Hotel]);
-    for (int i = 1; i < MAX_MENU_ITEMS; i++) 
-    {
-         printf("%d. %s \n", i, menus[City][Hotel][i]);
-
-    }
-}
-
-float calculatetotal(struct Order s) 
-{
-    float itemprice = prices[s.city][s.hotel][s.menu];
-    return s.quantity * itemprice;
-}
-
-
